@@ -1,0 +1,16 @@
+{
+    "name": "RTSPrototype.Agents",
+    "rootNamespace": "RTSPrototype.Agents",
+    "references": [
+        "RTSPrototype.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

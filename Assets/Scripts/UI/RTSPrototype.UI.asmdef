@@ -1,0 +1,16 @@
+{
+    "name": "RTSPrototype.UI",
+    "rootNamespace": "RTSPrototype.UI",
+    "references": [
+        "GUID:b8b8f7e6d7f4c02458f49606db1b49b3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
