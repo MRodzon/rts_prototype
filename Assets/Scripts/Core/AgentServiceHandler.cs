@@ -26,6 +26,11 @@ namespace RTSPrototype.Core
 
         public void RequestAgentRemoval()
         {
+            if(agentsCount == 0)
+            {
+                return;
+            }
+
             agentsCount--;
             OnAgentCountUpdated?.Invoke(agentsCount);
         }

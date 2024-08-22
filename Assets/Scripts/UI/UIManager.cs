@@ -18,6 +18,8 @@ namespace RTSPrototype.UI
 
         [Header("Time")]
         [SerializeField]
+        private UIGameSpeedLabel uIGameSpeedLabel;
+        [SerializeField]
         private UIButton uiSpeedUpTimeButton;
         [SerializeField]
         private UIButton uiSlowDownTimeButton;
@@ -38,6 +40,8 @@ namespace RTSPrototype.UI
             uiStopResumeTimeButton.OnButtonClicked += UiStopResumeTimeButton_OnButtonClicked;
 
             agentService.OnAgentCountUpdated += AgentService_OnAgentCountUpdated;
+
+            tickService.OnGameSpeedChanged += TickService_OnGameSpeedChanged;
         }
 
         private void OnDisable()
@@ -51,6 +55,8 @@ namespace RTSPrototype.UI
             uiStopResumeTimeButton.OnButtonClicked -= UiStopResumeTimeButton_OnButtonClicked;
 
             agentService.OnAgentCountUpdated -= AgentService_OnAgentCountUpdated;
+
+            tickService.OnGameSpeedChanged -= TickService_OnGameSpeedChanged;
         }
 
         [Inject]
@@ -93,6 +99,11 @@ namespace RTSPrototype.UI
         private void AgentService_OnAgentCountUpdated(int value)
         {
             uiAgentAmountLabel.UpdateLabel(value);
+        }
+
+        private void TickService_OnGameSpeedChanged(int value)
+        {
+            uIGameSpeedLabel.UpdateLabel(value);
         }
     }
 }
