@@ -18,17 +18,19 @@ namespace RTSPrototype.Agents
         [SerializeField]
         private float moveSpeed;
 
+        private float timeModifier;
+
         private int currentWaypoint;
 
         private Sequence pathSequence;
 
         private Guid agentGuid;
 
-
-        public void Initialize()
+        public void Initialize(int gameSpeed)
         {
             agentGuid = Guid.NewGuid();
 
+            SetTimeModifier(gameSpeed);
             SetNewPath();
         }
 
@@ -42,14 +44,40 @@ namespace RTSPrototype.Agents
             Destroy(gameObject);
         }
 
+        public void SetTimeModifier(int value)
+        {
+            timeModifier = value;
+
+            SetAnimatorValues(currentWaypoint == 0 ? 0 : moveSpeed * value);
+
+            if (pathSequence == null || !pathSequence.IsActive())
+            {
+                return;
+            }
+
+            if (value == 0)
+            {
+                pathSequence.Pause();
+            }
+            else if (value > 0 && !pathSequence.IsPlaying())
+            {
+                pathSequence.Play();
+            }
+        }
+
+        private void SetAnimatorValues(float value)
+        {
+            animator.SetFloat("Speed", value == 0 ? 0 : moveSpeed);
+            animator.SetFloat("MotionSpeed", value / 2);
+        }
+
         private void SetNewPath()
         {
-            var targetPos = Vector3.one * UnityEngine.Random.Range(-6, 6);
+            var x = UnityEngine.Random.Range(-6, 6);
+            var z = UnityEngine.Random.Range(-6, 6);
 
-            seeker.StartPath(transform.position, targetPos, ProgressWaypoint);
-
-            animator.SetFloat("Speed", moveSpeed);
-            animator.SetFloat("MotionSpeed", moveSpeed / 2);
+            seeker.StartPath(transform.position, new(x, 0, z), ProgressWaypoint);
+            SetAnimatorValues(moveSpeed * timeModifier);
         }
 
         private void ProgressWaypoint(Path path)
@@ -63,7 +91,7 @@ namespace RTSPrototype.Agents
             }
 
             var nextWaypointPos = path.vectorPath[currentWaypoint];
-            var pathSpeed = Vector3.Distance(nextWaypointPos, transform.position) / moveSpeed;
+            var pathSpeed = Vector3.Distance(nextWaypointPos, transform.position) / (moveSpeed * timeModifier);
 
             var angle = Vector3.Angle(Vector3.forward, nextWaypointPos - transform.position);
             var cross = Vector3.Cross(Vector3.forward, nextWaypointPos - transform.position);
@@ -74,9 +102,6 @@ namespace RTSPrototype.Agents
             }
 
             var newRotation = new Vector3(0, angle, 0);
-
-
-            Debug.Log(newRotation);
 
             transform.DOKill();
             transform.DORotate(newRotation, 0.3f);
@@ -90,7 +115,8 @@ namespace RTSPrototype.Agents
         private void OnPathComplete(Path path)
         {
             currentWaypoint = 0;
-            animator.SetFloat("Speed", 0);
+
+            SetAnimatorValues(0);
 
             OnDestinationReached?.Invoke(agentGuid.ToString());
 
@@ -99,7 +125,12 @@ namespace RTSPrototype.Agents
 
         private IEnumerator DelayedSetPath()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(timeModifier > 0 ? 1f / timeModifier : 1f);
+
+            while (timeModifier == 0)
+            {
+                yield return new WaitForEndOfFrame();
+            }
 
             SetNewPath();
         }

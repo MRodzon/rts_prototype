@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace RTSPrototype.UI
 {
-    public class UIButton : UIElement, IPointerEnterHandler, IPointerExitHandler
+    public class UIButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public event Action OnButtonClicked;
 

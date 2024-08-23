@@ -13,32 +13,38 @@ namespace RTSPrototype.Agents
         private List<Agent> agents = new();
 
         [Inject]
-        private IAgentService agentServiceHandler;
+        private IAgentService agentService;
+        [Inject]
+        private ITickService tickService;
 
         private void OnEnable()
         {
-            agentServiceHandler.OnAgentSpawnRequested += AgentServiceHandler_OnAgentSpawnRequested;
-            agentServiceHandler.OnAgentRemovalRequested += AgentServiceHandler_OnAgentRemovalRequested;
-            agentServiceHandler.OnAllAgentsClearRequested += AgentServiceHandler_OnAllAgentsClearRequested;
+            agentService.OnAgentSpawnRequested += AgentServiceHandler_OnAgentSpawnRequested;
+            agentService.OnAgentRemovalRequested += AgentServiceHandler_OnAgentRemovalRequested;
+            agentService.OnAllAgentsClearRequested += AgentServiceHandler_OnAllAgentsClearRequested;
+
+            tickService.OnGameSpeedChanged += TickService_OnGameSpeedChanged;
         }
 
         private void OnDisable()
         {
-            agentServiceHandler.OnAgentSpawnRequested -= AgentServiceHandler_OnAgentSpawnRequested;
-            agentServiceHandler.OnAgentRemovalRequested -= AgentServiceHandler_OnAgentRemovalRequested;
-            agentServiceHandler.OnAllAgentsClearRequested -= AgentServiceHandler_OnAllAgentsClearRequested;
+            agentService.OnAgentSpawnRequested -= AgentServiceHandler_OnAgentSpawnRequested;
+            agentService.OnAgentRemovalRequested -= AgentServiceHandler_OnAgentRemovalRequested;
+            agentService.OnAllAgentsClearRequested -= AgentServiceHandler_OnAllAgentsClearRequested;
+
+            tickService.OnGameSpeedChanged -= TickService_OnGameSpeedChanged;
         }
 
         private void AgentServiceHandler_OnAgentSpawnRequested()
         {
             var newAgent = Instantiate(agentPrefab, transform);
-            newAgent.Initialize();
+            newAgent.Initialize(tickService.GetGameSpeed());
 
             newAgent.OnDestinationReached += NewAgent_OnDestinationReached;
 
             agents.Add(newAgent);
 
-            agentServiceHandler.RegisterAgent(agents.Count);
+            agentService.RegisterAgent(agents.Count);
         }
 
         private void AgentServiceHandler_OnAgentRemovalRequested()
@@ -50,7 +56,7 @@ namespace RTSPrototype.Agents
             agents.Remove(agentToRemove);
             agentToRemove.Remove();
 
-            agentServiceHandler.UnregisterAgent(agents.Count);
+            agentService.UnregisterAgent(agents.Count);
         }
 
         private void AgentServiceHandler_OnAllAgentsClearRequested()
@@ -60,13 +66,21 @@ namespace RTSPrototype.Agents
                 agents[i].Remove();
                 agents.RemoveAt(i);
 
-                agentServiceHandler.UnregisterAgent(agents.Count);
+                agentService.UnregisterAgent(agents.Count);
+            }
+        }
+
+        private void TickService_OnGameSpeedChanged(int value)
+        {
+            for (int i = 0; i < agents.Count; i++)
+            {
+                agents[i].SetTimeModifier(value);
             }
         }
 
         private void NewAgent_OnDestinationReached(string agentGuid)
         {
-            agentServiceHandler.TriggerDestinationReached(agentGuid);
+            agentService.TriggerDestinationReached(agentGuid);
         }
     }
 }

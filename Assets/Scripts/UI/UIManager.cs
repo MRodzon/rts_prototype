@@ -67,6 +67,12 @@ namespace RTSPrototype.UI
             tickService.OnGameSpeedChanged -= TickService_OnGameSpeedChanged;
         }
 
+        private void Awake()
+        {
+            uiAgentAmountLabel.Initialize();
+            uiGameSpeedLabel.Initialize(tickService.GetGameSpeed());
+        }
+
         private void UiSpawnAgentButton_OnButtonClicked()
         {
             agentService.RequestAgentSpawn();
@@ -84,17 +90,17 @@ namespace RTSPrototype.UI
 
         private void UiSpeedUpTimeButton_OnButtonClicked()
         {
-            tickService.RequestSpeedUpTime();
+            tickService.SpeedUpTime();
         }
 
         private void UiSlowDownTimeButton_OnButtonClicked()
         {
-            tickService.RequestSlowDownTime();
+            tickService.SlowDownTime();
         }
 
         private void UiStopResumeTimeButton_OnButtonClicked()
         {
-            tickService.RequestStopResumeTime();
+            tickService.StopResumeTime();
         }
 
         private void AgentService_OnAgentCountUpdated(int value)

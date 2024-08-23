@@ -25,30 +25,16 @@ namespace RTSPrototype.Core
         public void RequestAgentSpawn()
         {
             OnAgentSpawnRequested?.Invoke();
-
-            /*agentsCount++;
-            OnAgentCountUpdated?.Invoke(agentsCount);*/
         }
 
         public void RequestAgentRemoval()
         {
             OnAgentRemovalRequested?.Invoke();
-
-            /*if(agentsCount == 0)
-            {
-                return;
-            }
-
-            agentsCount--;
-            OnAgentCountUpdated?.Invoke(agentsCount);*/
         }
 
         public void RequestAllAgentsRemoval()
         {
             OnAllAgentsClearRequested?.Invoke();
-
-            /*agentsCount = 0;
-            OnAgentCountUpdated?.Invoke(agentsCount);*/
         }
 
         public void TriggerDestinationReached(string agentGuid)

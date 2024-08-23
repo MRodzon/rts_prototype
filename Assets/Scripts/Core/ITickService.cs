@@ -5,14 +5,12 @@ namespace RTSPrototype.Core
     public interface ITickService
     {
         event Action<int> OnGameSpeedChanged;
-        event Action OnTick;
 
-        void RequestSpeedUpTime();
-        void RequestSlowDownTime();
-        void RequestStopResumeTime();
+        void SpeedUpTime();
+        void SlowDownTime();
+        void StopResumeTime();
 
         bool IsGameStopped();
-
-        void SetTickRate();
+        int GetGameSpeed();
     }
 }

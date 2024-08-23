@@ -5,17 +5,11 @@ namespace RTSPrototype.Core
     public class TickServiceHandler : ITickService
     {
         public event Action<int> OnGameSpeedChanged;
-        public event Action OnTick;
 
-        private int gameSpeed;
+        private int gameSpeed = 1;
         private bool isGameStopped;
 
-        public void SetTickRate()
-        {
-
-        }
-
-        public void RequestSlowDownTime()
+        public void SlowDownTime()
         {
             if (gameSpeed == 0)
             {
@@ -28,7 +22,7 @@ namespace RTSPrototype.Core
             OnGameSpeedChanged?.Invoke(gameSpeed);
         }
 
-        public void RequestSpeedUpTime()
+        public void SpeedUpTime()
         {
             gameSpeed++;
             isGameStopped = false;
@@ -36,7 +30,7 @@ namespace RTSPrototype.Core
             OnGameSpeedChanged?.Invoke(gameSpeed);
         }
 
-        public void RequestStopResumeTime()
+        public void StopResumeTime()
         {
             isGameStopped = !isGameStopped;
             OnGameSpeedChanged?.Invoke(isGameStopped ? 0 : gameSpeed);
@@ -45,6 +39,11 @@ namespace RTSPrototype.Core
         public bool IsGameStopped()
         {
             return gameSpeed == 0 || isGameStopped;
+        }
+
+        public int GetGameSpeed()
+        {
+            return isGameStopped ? 0 : gameSpeed;
         }
     }
 }

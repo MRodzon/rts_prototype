@@ -8,9 +8,9 @@ namespace RTSPrototype.UI
         [SerializeField]
         private TMP_Text labelText;
 
-        private void Awake()
+        public void Initialize(int value)
         {
-            labelText.text = "0";
+            labelText.text = value.ToString();
         }
 
         public void UpdateLabel(int value)
