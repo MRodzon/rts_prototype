@@ -18,7 +18,7 @@ namespace RTSPrototype.UI
 
         [Header("Time")]
         [SerializeField]
-        private UIGameSpeedLabel uIGameSpeedLabel;
+        private UIGameSpeedLabel uiGameSpeedLabel;
         [SerializeField]
         private UIButton uiSpeedUpTimeButton;
         [SerializeField]
@@ -26,7 +26,13 @@ namespace RTSPrototype.UI
         [SerializeField]
         private UIButton uiStopResumeTimeButton;
 
+        [Header("Other")]
+        [SerializeField]
+        private UIInfoLabel uiInfoLabel;
+
+        [Inject]
         private IAgentService agentService;
+        [Inject]
         private ITickService tickService;
 
         private void OnEnable()
@@ -40,6 +46,7 @@ namespace RTSPrototype.UI
             uiStopResumeTimeButton.OnButtonClicked += UiStopResumeTimeButton_OnButtonClicked;
 
             agentService.OnAgentCountUpdated += AgentService_OnAgentCountUpdated;
+            agentService.OnDestinationReached += AgentService_OnDestinationReached;
 
             tickService.OnGameSpeedChanged += TickService_OnGameSpeedChanged;
         }
@@ -55,15 +62,9 @@ namespace RTSPrototype.UI
             uiStopResumeTimeButton.OnButtonClicked -= UiStopResumeTimeButton_OnButtonClicked;
 
             agentService.OnAgentCountUpdated -= AgentService_OnAgentCountUpdated;
+            agentService.OnDestinationReached -= AgentService_OnDestinationReached;
 
             tickService.OnGameSpeedChanged -= TickService_OnGameSpeedChanged;
-        }
-
-        [Inject]
-        private void Inject(IAgentService agentService, ITickService tickService)
-        {
-            this.agentService = agentService;
-            this.tickService = tickService;
         }
 
         private void UiSpawnAgentButton_OnButtonClicked()
@@ -101,9 +102,14 @@ namespace RTSPrototype.UI
             uiAgentAmountLabel.UpdateLabel(value);
         }
 
+        private void AgentService_OnDestinationReached(string agentGuid)
+        {
+            uiInfoLabel.TriggerInfoMessage(agentGuid);
+        }
+
         private void TickService_OnGameSpeedChanged(int value)
         {
-            uIGameSpeedLabel.UpdateLabel(value);
+            uiGameSpeedLabel.UpdateLabel(value);
         }
     }
 }

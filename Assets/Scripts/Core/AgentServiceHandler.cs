@@ -6,39 +6,54 @@ namespace RTSPrototype.Core
     {
         public event Action<int> OnAgentCountUpdated;
 
-        private int agentsCount;
+        public event Action OnAgentSpawnRequested;
+        public event Action OnAgentRemovalRequested;
+        public event Action OnAllAgentsClearRequested;
 
-        public void RegisterAgent()
+        public event Action<string> OnDestinationReached;
+
+        public void RegisterAgent(int currentAgentsCountValue)
         {
-
+            OnAgentCountUpdated?.Invoke(currentAgentsCountValue);
         }
 
-        public void UnregisterAgent()
+        public void UnregisterAgent(int currentAgentsCountValue)
         {
-
+            OnAgentCountUpdated?.Invoke(currentAgentsCountValue);
         }
 
         public void RequestAgentSpawn()
         {
-            agentsCount++;
-            OnAgentCountUpdated?.Invoke(agentsCount);
+            OnAgentSpawnRequested?.Invoke();
+
+            /*agentsCount++;
+            OnAgentCountUpdated?.Invoke(agentsCount);*/
         }
 
         public void RequestAgentRemoval()
         {
-            if(agentsCount == 0)
+            OnAgentRemovalRequested?.Invoke();
+
+            /*if(agentsCount == 0)
             {
                 return;
             }
 
             agentsCount--;
-            OnAgentCountUpdated?.Invoke(agentsCount);
+            OnAgentCountUpdated?.Invoke(agentsCount);*/
         }
 
         public void RequestAllAgentsRemoval()
         {
-            agentsCount = 0;
-            OnAgentCountUpdated?.Invoke(agentsCount);
+            OnAllAgentsClearRequested?.Invoke();
+
+            /*agentsCount = 0;
+            OnAgentCountUpdated?.Invoke(agentsCount);*/
+        }
+
+        public void TriggerDestinationReached(string agentGuid)
+        {
+            OnDestinationReached?.Invoke(agentGuid);
         }
     }
 }

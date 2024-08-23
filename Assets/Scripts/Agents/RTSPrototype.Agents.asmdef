@@ -2,7 +2,8 @@
     "name": "RTSPrototype.Agents",
     "rootNamespace": "RTSPrototype.Agents",
     "references": [
-        "RTSPrototype.Core"
+        "RTSPrototype.Core",
+        "AstarPathfindingProject"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

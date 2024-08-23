@@ -23,12 +23,16 @@ namespace RTSPrototype.Core
             }
 
             gameSpeed--;
+            isGameStopped = false;
+
             OnGameSpeedChanged?.Invoke(gameSpeed);
         }
 
         public void RequestSpeedUpTime()
         {
             gameSpeed++;
+            isGameStopped = false;
+
             OnGameSpeedChanged?.Invoke(gameSpeed);
         }
 
